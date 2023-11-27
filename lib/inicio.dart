@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-// ignore: depend_on_referenced_packages
-
-import 'form_tecnico.dart';
-
+import 'package:flutter_sqlite/database/db.dart';
+import 'package:flutter_sqlite/form_tecnico.dart';
+import 'package:flutter_sqlite/model/usuario.dart';
 
 class Inicio extends StatefulWidget {
   const Inicio({Key? key}) : super(key: key);
@@ -12,12 +11,43 @@ class Inicio extends StatefulWidget {
 }
 
 class InicioState extends State<Inicio> {
-  Color textColor = Colors.black;
-  Color textColorWarning = Colors.grey;
-  Color borderColor = Colors.grey;
+  late DB _database;
+  bool _isLoading = true;
 
-    final TextEditingController _usuario = TextEditingController();
-    final TextEditingController _senha = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+    _initDatabase();
+  }
+
+  _initDatabase() async {
+    try {
+      _database = DB();
+      print("Opening the database...");
+      await _database.openDatabaseConnection();
+      print("Database connection successful!");
+      await findUsers();
+    } catch (error) {
+      print("Error opening the database: $error");
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  findUsers() async {
+    try {
+      print("Fetching users...");
+      List<Usuario> data = await _database.getAllUsuarios();
+
+    } catch (error) {
+      print("Error fetching users: $error");
+    }
+  }
+
+  final TextEditingController _usuario = TextEditingController();
+  final TextEditingController _senha = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -30,50 +60,51 @@ class InicioState extends State<Inicio> {
               height: 200,
               width: 200,
               decoration: const BoxDecoration(
-                shape: BoxShape.circle, // Torna o container circular
+                shape: BoxShape.circle,
                 image: DecorationImage(
                   image: AssetImage('assets/images/flutter.png'),
                   fit: BoxFit.cover,
                 ),
               ),
             ),
-             const Text(
+            const Text(
               'Usuario',
               style: TextStyle(fontSize: 28.0, color: Colors.blue),
             ),
             TextField(
-                controller: _usuario,
-                keyboardType: TextInputType.text,
-                decoration: const InputDecoration(
-                  hintText: "Usuario", // Use o valor do _nome como hintText
-                  prefixIcon: Icon(Icons.account_circle_outlined),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blue),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blue),
-                  ),
+              controller: _usuario,
+              keyboardType: TextInputType.text,
+              decoration: const InputDecoration(
+                hintText: "Usuario",
+                prefixIcon: Icon(Icons.account_circle_outlined),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.blue),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.blue),
                 ),
               ),
-               const Text(
+            ),
+            const Text(
               'Senha',
               style: TextStyle(fontSize: 28.0, color: Colors.blue),
             ),
-              TextField(
-                  obscureText: true,
-                  obscuringCharacter: "*",
-                  controller: _senha,
-                  keyboardType: TextInputType.text,
-                  decoration: InputDecoration(
-                    hintText: "Entre com a senha",
-                    prefixIcon: const Icon(Icons.lock),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: borderColor),
-                    ),
-                    focusedBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue)),
-                  ),
+            TextField(
+              obscureText: true,
+              obscuringCharacter: "*",
+              controller: _senha,
+              keyboardType: TextInputType.text,
+              decoration: const InputDecoration(
+                hintText: "Entre com a senha",
+                prefixIcon: Icon(Icons.lock),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey),
                 ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.blue),
+                ),
+              ),
+            ),
             const SizedBox(height: 50.0),
             SizedBox(
               width: 170,
@@ -82,7 +113,8 @@ class InicioState extends State<Inicio> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => FormularioTecnico(usuario:_usuario.text),
+                      builder: (context) =>
+                          FormularioTecnico(usuario: _usuario.text),
                     ),
                   );
                 },
