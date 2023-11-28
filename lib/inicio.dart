@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_sqlite/database/db.dart';
-import 'package:flutter_sqlite/form_tecnico.dart';
+import 'package:flutter_sqlite/listagem_produtos.dart';
 import 'package:flutter_sqlite/model/usuario.dart';
 
 class Inicio extends StatefulWidget {
@@ -12,7 +12,6 @@ class Inicio extends StatefulWidget {
 
 class InicioState extends State<Inicio> {
   late DB _database;
-  bool _isLoading = true;
 
   @override
   void initState() {
@@ -22,7 +21,7 @@ class InicioState extends State<Inicio> {
 
   _initDatabase() async {
     try {
-      _database = DB();
+      _database = DB.instance;
       print("Opening the database...");
       await _database.openDatabaseConnection();
       print("Database connection successful!");
@@ -34,7 +33,6 @@ class InicioState extends State<Inicio> {
 Future<bool> login(String email, String senha) async {
   try {
     List<Usuario> usuarios = await _database.getUserByEmailAndPassword(email, senha);
-    print(usuarios);
     if (usuarios.isNotEmpty) {
       return true;
     }
@@ -115,7 +113,7 @@ Future<bool> login(String email, String senha) async {
                       context,
                       MaterialPageRoute(
                         builder: (context) =>
-                            FormularioTecnico(usuario: _usuario.text),
+                            ListagemProdutos(usuario: _usuario.text),
                       ),
                     );
                   } else {

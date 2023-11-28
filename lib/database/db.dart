@@ -7,6 +7,11 @@ import 'dart:convert';
 
 class DB {
   late Database _database;
+  static late final DB _instance = DB._();
+
+  DB._();
+
+  static DB get instance => _instance;
 
   late List<String> inserts = [
     "INSERT IGNORE INTO usuarios(id, nome, email, senha) VALUES(1,'Nicolas', 'nicolas@gmail.com', 'senha')",

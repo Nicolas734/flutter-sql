@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'form_graduacao.dart';
 
-class FormularioTecnico extends StatefulWidget {
+class ListagemProdutos extends StatefulWidget {
   final String usuario;
 
-  const FormularioTecnico({
+  const ListagemProdutos({
     Key? key,
     required this.usuario,
   }) : super(key: key);
@@ -13,7 +13,7 @@ class FormularioTecnico extends StatefulWidget {
   FormsState createState() => FormsState(usuario: usuario);
 }
 
-class FormsState extends State<FormularioTecnico> {
+class FormsState extends State<ListagemProdutos> {
   final TextEditingController _usuario;
   List<int> selecionadosIndices = [];
 
