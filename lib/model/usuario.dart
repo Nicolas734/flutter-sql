@@ -5,6 +5,4 @@ class Usuario {
   late final String senha;
 
   Usuario({required this.id, required this.nome, required this.email, required this.senha});
-
-    
 }

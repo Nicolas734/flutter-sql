@@ -26,25 +26,24 @@ class InicioState extends State<Inicio> {
       print("Opening the database...");
       await _database.openDatabaseConnection();
       print("Database connection successful!");
-      await findUsers();
     } catch (error) {
       print("Error opening the database: $error");
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
     }
   }
 
-  findUsers() async {
-    try {
-      print("Fetching users...");
-      List<Usuario> data = await _database.getAllUsuarios();
-
-    } catch (error) {
-      print("Error fetching users: $error");
+Future<bool> login(String email, String senha) async {
+  try {
+    List<Usuario> usuarios = await _database.getUserByEmailAndPassword(email, senha);
+    print(usuarios);
+    if (usuarios.isNotEmpty) {
+      return true;
     }
+    return false;
+  } catch (error) {
+    print(error);
+    return false;
   }
+}
 
   final TextEditingController _usuario = TextEditingController();
   final TextEditingController _senha = TextEditingController();
@@ -109,14 +108,24 @@ class InicioState extends State<Inicio> {
             SizedBox(
               width: 170,
               child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          FormularioTecnico(usuario: _usuario.text),
-                    ),
-                  );
+                onPressed: () async {
+                  bool ret = await login(_usuario.text, _senha.text);
+                  if(ret){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            FormularioTecnico(usuario: _usuario.text),
+                      ),
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Login inválido'),
+                        backgroundColor: Color(Colors.red.value),
+                      ),
+                    );
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   fixedSize: const Size(220, 20),
