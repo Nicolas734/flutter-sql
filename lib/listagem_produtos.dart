@@ -5,8 +5,10 @@ import 'package:flutter_sqlite/model/produto.dart';
 import 'carrinho_compra.dart';
 
 class ListagemProdutos extends StatefulWidget {
+  final List<int> selecionados;
   const ListagemProdutos({
     Key? key,
+    this.selecionados = const [],
   }) : super(key: key);
 
   @override
@@ -23,6 +25,17 @@ class ListagemProdutosState extends State<ListagemProdutos> {
     super.initState();
     _loadDBinstance();
     loadProducts();
+    loadProdutosSelecinados();
+  }
+
+  void loadProdutosSelecinados(){
+    if(!widget.selecionados.isEmpty){
+      for(int index in widget.selecionados){
+        setState(() {
+          selecionadosIndices.add(index);
+        });
+      }
+    }
   }
 
   _loadDBinstance() async {
@@ -167,6 +180,7 @@ class ListagemProdutosState extends State<ListagemProdutos> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => CarrinhoCompra(
+                      prodSelecionados: selecionadosIndices,
                       produtos: produtosSelecionados,
                     ),
                   ),

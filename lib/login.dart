@@ -113,7 +113,7 @@ Future<bool> login(String email, String senha) async {
                       context,
                       MaterialPageRoute(
                         builder: (context) =>
-                            ListagemProdutos(),
+                            ListagemProdutos(selecionados: []),
                       ),
                     );
                   } else {

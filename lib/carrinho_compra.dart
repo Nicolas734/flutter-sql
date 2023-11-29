@@ -5,9 +5,10 @@ import 'package:flutter_sqlite/model/produto.dart';
 
 
 class CarrinhoCompra extends StatefulWidget {
+  final List<int> prodSelecionados;
   final List<Produto> produtos;
 
-  const CarrinhoCompra({Key? key, required this.produtos}) : super(key: key);
+  const CarrinhoCompra({Key? key, required this.produtos, required this.prodSelecionados}) : super(key: key);
 
   @override
   CarrinhoCompraState createState() => CarrinhoCompraState();
@@ -69,7 +70,7 @@ class CarrinhoCompraState extends State<CarrinhoCompra> {
             Navigator.of(context).pop();
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const ListagemProdutos()),
+              MaterialPageRoute(builder: (context) => ListagemProdutos(selecionados: widget.prodSelecionados)),
             );
             ;
           },
