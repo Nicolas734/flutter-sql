@@ -3,14 +3,14 @@ import 'package:flutter_sqlite/database/db.dart';
 import 'package:flutter_sqlite/listagem_produtos.dart';
 import 'package:flutter_sqlite/model/usuario.dart';
 
-class Inicio extends StatefulWidget {
-  const Inicio({Key? key}) : super(key: key);
+class Login extends StatefulWidget {
+  const Login({Key? key}) : super(key: key);
 
   @override
-  InicioState createState() => InicioState();
+  LoginState createState() => LoginState();
 }
 
-class InicioState extends State<Inicio> {
+class LoginState extends State<Login> {
   late DB _database;
 
   @override
@@ -113,13 +113,13 @@ Future<bool> login(String email, String senha) async {
                       context,
                       MaterialPageRoute(
                         builder: (context) =>
-                            ListagemProdutos(usuario: _usuario.text),
+                            ListagemProdutos(),
                       ),
                     );
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text('Login inválido'),
+                        content: Text('Login inválido, email ou senha incorretos!'),
                         backgroundColor: Color(Colors.red.value),
                       ),
                     );

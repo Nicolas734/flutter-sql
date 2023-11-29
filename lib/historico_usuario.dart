@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 
-import 'inicio.dart';
+import 'login.dart';
 
 class HistoricoUsuario extends StatefulWidget {
   final String usuario;
@@ -75,7 +75,7 @@ class HistoricoUsuarioState extends State<HistoricoUsuario> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const Inicio(),
+                      builder: (context) => const Login(),
                     ),
                   );
                 },

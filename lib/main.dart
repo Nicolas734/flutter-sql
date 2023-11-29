@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'inicio.dart';
+import 'login.dart';
 
 
 void main() {
@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       title: 'Navegação',
-      home: Inicio(),
+      home: Login(),
     );
   }
 }

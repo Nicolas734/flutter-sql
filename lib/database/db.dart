@@ -106,8 +106,7 @@ class DB {
     if (response.statusCode == 200) {
       final jsonResponse = json.decode(response.body);
       for (int i = 0; i < jsonResponse.length; i++) {
-        List<Produto> produtos =
-            await getProductByName(jsonResponse[i]['nome']);
+        List<Produto> produtos = await getProductByName(jsonResponse[i]['nome']);
         if (!produtos.isEmpty) {
           String query =
               "INSERT INTO produtos(nome,descricao, preco, quantidade) VALUES('${jsonResponse[i]['nome']}','${jsonResponse[i]['descricao']}', ${jsonResponse[i]['preco']}, ${jsonResponse[i]['quantidade']})";

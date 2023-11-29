@@ -1,28 +1,66 @@
+import 'package:flutter_sqlite/database/db.dart';
 import 'package:flutter/material.dart';
-import 'form_graduacao.dart';
+import 'package:flutter_sqlite/login.dart';
+import 'package:flutter_sqlite/model/produto.dart';
+import 'carrinho_compra.dart';
 
 class ListagemProdutos extends StatefulWidget {
-  final String usuario;
-
   const ListagemProdutos({
     Key? key,
-    required this.usuario,
   }) : super(key: key);
 
   @override
-  FormsState createState() => FormsState(usuario: usuario);
+  ListagemProdutosState createState() => ListagemProdutosState();
 }
 
-class FormsState extends State<ListagemProdutos> {
-  final TextEditingController _usuario;
+class ListagemProdutosState extends State<ListagemProdutos> {
+  late DB _database = DB.instance;
   List<int> selecionadosIndices = [];
+  final List<Produto> _produtos = [];
 
-  FormsState({required String usuario})
-      : _usuario = TextEditingController(text: usuario);
+  @override
+  void initState() {
+    super.initState();
+    _loadDBinstance();
+    loadProducts();
+  }
+
+  _loadDBinstance() async {
+    try {
+      _database = DB.instance;
+    } catch (error) {
+      print("Error on loading database instance: $error");
+    }
+  }
+
+  loadProducts() async {
+    try {
+      List<Produto> listProduto = await _database.getProdutcts();
+      setState(() {
+        _produtos.addAll(listProduto);
+      });
+    } catch (error) {
+      print("Error on loading products: $error");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pop();
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const Login()),
+            );
+            ;
+          },
+        ),
+        title: const Text("Login"),
+      ),
       body: Align(
         alignment: Alignment.topCenter,
         child: Column(
@@ -36,8 +74,9 @@ class FormsState extends State<ListagemProdutos> {
                   border: Border.all(color: Colors.grey, width: 1.0),
                 ),
                 child: ListView.builder(
-                  itemCount: 5, // Número fixo de itens para paginação
+                  itemCount: _produtos.length,
                   itemBuilder: (BuildContext context, int index) {
+                    final Produto produto = _produtos[index];
                     return GestureDetector(
                       onTap: () {
                         setState(() {
@@ -62,11 +101,47 @@ class FormsState extends State<ListagemProdutos> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Item ${index + 1}',
-                                    style: const TextStyle(
-                                        fontSize: 18.0,
-                                        fontWeight: FontWeight.bold)),
-                                const SizedBox(height: 8.0),
+                                Text(
+                                  'Cod #${produto.id}',
+                                  style: const TextStyle(
+                                    fontSize: 15.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 6.0),
+                                Text(
+                                  'Nome: ${produto.nome}',
+                                  style: const TextStyle(
+                                    fontSize: 15.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 6.0),
+                                Text(
+                                  'Descrição: ${produto.descricao}',
+                                  style: const TextStyle(
+                                    fontSize: 15.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
+                                ),
+                                const SizedBox(height: 6.0),
+                                Text(
+                                  'Preço: ${produto.preco.toStringAsFixed(2)} Reais',
+                                  style: const TextStyle(
+                                    fontSize: 15.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 6.0),
+                                Text(
+                                  'Quantidade: ${produto.quantidade}',
+                                  style: const TextStyle(
+                                    fontSize: 15.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                               ],
                             ),
                           ),
@@ -81,19 +156,18 @@ class FormsState extends State<ListagemProdutos> {
             const SizedBox(height: 20.0),
             ElevatedButton(
               onPressed: () {
-                List<String> tecnicosSelecionados = [];
+                List<Produto> produtosSelecionados = [];
 
                 if (selecionadosIndices.isNotEmpty) {
                   for (int index in selecionadosIndices) {
-                    tecnicosSelecionados.add("Item ${index + 1}");
+                    produtosSelecionados.add(_produtos[index]);
                   }
                 }
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => FormularioGraduacao(
-                      usuario: _usuario.text,
-                      tecnicos: tecnicosSelecionados, tecnico: '',
+                    builder: (context) => CarrinhoCompra(
+                      produtos: produtosSelecionados,
                     ),
                   ),
                 );
