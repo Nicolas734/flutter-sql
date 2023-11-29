@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sqlite/listagem_produtos.dart';
 import 'package:flutter_sqlite/login.dart';
 import 'package:flutter_sqlite/model/produto.dart';
-import 'form_especializacao.dart';
+
 
 class CarrinhoCompra extends StatefulWidget {
   final List<Produto> produtos;
