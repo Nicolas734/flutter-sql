@@ -14,14 +14,14 @@ class DB {
   static DB get instance => _instance;
 
   late List<String> inserts = [
-    "INSERT IGNORE INTO usuarios(id, nome, email, senha) VALUES(1,'Nicolas', 'nicolas@gmail.com', 'senha')",
-    "INSERT IGNORE INTO usuarios(id, nome, email, senha) VALUES(2,'Rodrigo', 'rodrigo@gmail.com','senha')",
-    "INSERT IGNORE INTO usuarios(id, nome, email, senha) VALUES(3,'Raniel', 'raniel@gmail.com','senha')",
-    "INSERT IGNORE INTO usuarios(id, nome, email, senha) VALUES(4,'Natalia', 'natalia@gmail.com','senha')",
-    "INSERT IGNORE INTO usuarios(id, nome, email, senha) VALUES(5,'Rafael', 'rafael@gmail.com','senha')",
-    "INSERT IGNORE INTO usuarios(id, nome, email, senha) VALUES(6,'Kevin', 'kevin@gmail.com','senha')",
-    "INSERT IGNORE INTO usuarios(id, nome, email, senha) VALUES(7,'Vinicius', 'vinicius@gmail.com','senha')",
-    "INSERT IGNORE INTO usuarios(id, nome, email, senha) VALUES(8,'Antonio', 'antonio@gmail.com','senha')",
+    "INSERT INTO usuarios(id, nome, email, senha) VALUES(1,'Nicolas', 'nicolas@gmail.com', 'senha')",
+    "INSERT INTO usuarios(id, nome, email, senha) VALUES(2,'Rodrigo', 'rodrigo@gmail.com','senha')",
+    "INSERT INTO usuarios(id, nome, email, senha) VALUES(3,'Raniel', 'raniel@gmail.com','senha')",
+    "INSERT INTO usuarios(id, nome, email, senha) VALUES(4,'Natalia', 'natalia@gmail.com','senha')",
+    "INSERT INTO usuarios(id, nome, email, senha) VALUES(5,'Rafael', 'rafael@gmail.com','senha')",
+    "INSERT INTO usuarios(id, nome, email, senha) VALUES(6,'Kevin', 'kevin@gmail.com','senha')",
+    "INSERT INTO usuarios(id, nome, email, senha) VALUES(7,'Vinicius', 'vinicius@gmail.com','senha')",
+    "INSERT INTO usuarios(id, nome, email, senha) VALUES(8,'Antonio', 'antonio@gmail.com','senha')",
   ];
 
   Future<void> openDatabaseConnection() async {
@@ -30,6 +30,9 @@ class DB {
       path,
       version: 1,
       onCreate: (db, version) async {
+        await db.execute('''DROP TABLE usuarios''');
+        await db.execute('''DROP TABLE produtos''');
+        await db.execute('''DROP TABLE compras''');
         await db.execute(
           '''CREATE TABLE usuarios(
               id INTEGER PRIMARY KEY AUTOINCREMENT, 
